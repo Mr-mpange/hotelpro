@@ -1,0 +1,114 @@
+# ZenoPay Payment API Test Examples
+# Use with REST Client extension in VS Code or similar HTTP client
+
+### Environment Variables (set these in your .env file)
+# ZENOPAY_API_KEY=your_zenopay_api_key
+# ZENOPAY_MERCHANT_ID=your_merchant_id
+# ZENOPAY_BASE_URL=https://api-sandbox.zenopay.com/v1
+# BACKEND_URL=http://localhost:5000
+
+### 1. Initiate Payment - Standard Room Booking
+POST http://localhost:5000/payments/initiate
+Content-Type: application/json
+
+{
+  "amount": 85000,
+  "currency": "TZS",
+  "customerEmail": "jane.smith@example.com",
+  "customerPhone": "+255723456789",
+  "description": "Hotel room booking - Standard Room",
+  "bookingId": 2
+}
+
+### 2. Initiate Payment - Deluxe Suite Booking
+POST http://localhost:5000/payments/initiate
+Content-Type: application/json
+
+{
+  "amount": 150000,
+  "currency": "TZS",
+  "customerEmail": "john.doe@example.com",
+  "customerPhone": "+255712345678",
+  "description": "Hotel room booking - Deluxe Suite",
+  "bookingId": 1
+}
+
+### 3. Initiate Payment - Presidential Suite
+POST http://localhost:5000/payments/initiate
+Content-Type: application/json
+
+{
+  "amount": 250000,
+  "currency": "TZS",
+  "customerEmail": "mike.wilson@example.com",
+  "customerPhone": "+255734567890",
+  "description": "Hotel room booking - Presidential Suite",
+  "bookingId": 3
+}
+
+### 4. Verify Payment Status (replace with actual transaction ID)
+GET http://localhost:5000/payments/verify/ZP_TXN_1704723600000
+
+### 5. Get All Payments
+GET http://localhost:5000/payments/
+
+### 6. Get Payment by ID (replace with actual payment ID)
+GET http://localhost:5000/payments/1
+
+### 7. Get Payment by Reference (replace with actual reference)
+GET http://localhost:5000/payments/reference/HOTEL_1704723600000_abc123def
+
+### 8. Update Payment Status (Admin only - replace with actual payment ID)
+PUT http://localhost:5000/payments/1/status
+Content-Type: application/json
+
+{
+  "status": "completed"
+}
+
+### 9. Test Webhook (simulate ZenoPay webhook call)
+POST http://localhost:5000/payments/webhook
+Content-Type: application/json
+
+{
+  "transactionId": "ZP_TXN_1704723600000",
+  "status": "completed",
+  "amount": 150000,
+  "currency": "TZS",
+  "reference": "HOTEL_1704723600000_abc123def",
+  "signature": "test_signature_hash",
+  "timestamp": "2024-01-08T12:05:00Z"
+}
+
+### 10. Test Invalid Payment Request (missing required fields)
+POST http://localhost:5000/payments/initiate
+Content-Type: application/json
+
+{
+  "amount": 50000,
+  "currency": "TZS"
+}
+
+### 11. Test Payment with Minimum Amount
+POST http://localhost:5000/payments/initiate
+Content-Type: application/json
+
+{
+  "amount": 1000,
+  "currency": "TZS",
+  "customerEmail": "test@example.com",
+  "customerPhone": "+255700000000",
+  "description": "Minimum amount test payment"
+}
+
+### 12. Test Payment with USD Currency
+POST http://localhost:5000/payments/initiate
+Content-Type: application/json
+
+{
+  "amount": 100,
+  "currency": "USD",
+  "customerEmail": "international@example.com",
+  "customerPhone": "+1234567890",
+  "description": "International payment test"
+}
